@@ -97,3 +97,8 @@ docker compose down
 ### airport source
 
 - <https://www.kaggle.com/datasets/asadcodes/airports-data?select=airports.csv>
+
+### project setup
+
+- run `python setup.py` from web service shell
+it will load all airport to the redis db

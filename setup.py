@@ -3,7 +3,7 @@ import json
 from redis import Redis
 import time
 
-redis = Redis(host="127.0.0.1", port=6379)
+redis = Redis(host="redis", port=6379)
 
 data = {}
 

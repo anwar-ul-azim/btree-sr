@@ -1,4 +1,5 @@
-from flask import Flask
+import json
+from flask import Flask, request
 from redis import Redis
 
 app = Flask(__name__)
@@ -9,7 +10,27 @@ redis = Redis(host="redis", port=6379)
 def hello():
     redis.incr("hits")
     counter = str(redis.get("hits"), "utf-8")
-    return "This webpage has been viewed " + counter + " time(s)"
+    data = {
+        "msg": f"This page has been viewed {counter} time(s)",
+        "apis": ["/search?arg=<any airport code>"],
+    }
+    return data
+
+
+@app.route("/search")
+def search_airport():
+    """search airport by iata code"""
+    arg = request.args.get("arg")
+    if not arg:
+        return "give a valid arg", 400
+    arg = arg.upper()
+    if len(arg) == 3:
+        result = redis.get(arg)
+    else:
+        result = None
+    if not result:
+        return "result not found", 400
+    return [json.loads(str(result, "utf-8"))]
 
 
 if __name__ == "__main__":
