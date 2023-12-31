@@ -3,11 +3,18 @@ from flask import Flask, request
 from redis import Redis
 
 app = Flask(__name__)
-redis = Redis(host="redis", port=6379)
+try:
+    redis = Redis(host="redis", port=6379)
+except:
+    redis = Redis(host="btree-sr-redis", port=6379)
+finally:
+    redis = None
 
 
 @app.route("/")
 def hello():
+    if not redis:
+        return {}
     redis.incr("hits")
     counter = str(redis.get("hits"), "utf-8")
     data = {
@@ -23,6 +30,8 @@ def search_airport():
     arg = request.args.get("arg")
     if not arg:
         return "give a valid arg", 400
+    if not redis:
+        return {}
     arg = arg.upper()
     if len(arg) == 3:
         result = redis.get(arg)

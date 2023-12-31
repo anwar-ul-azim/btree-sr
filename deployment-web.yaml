@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: btree-sr-web-service
+  namespace: btree
+spec:
+  selector:
+    app: btree-sr-web
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: 8000
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btree-sr-web
+  namespace: btree
+spec:
+  selector:
+    matchLabels:
+      app: btree-sr-web
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: btree-sr-web
+    spec:
+      containers:
+        - name: btree-sr-web
+          image: docker.io/anwarazim627/btree-sr-web:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btree-sr-redis
+  namespace: btree
+spec:
+  selector:
+    matchLabels:
+      app: btree-sr-redis
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: btree-sr-redis
+    spec:
+      containers:
+        - name: btree-sr-redis
+          image: docker.io/anwarazim627/btree-sr-redis:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6379
+
